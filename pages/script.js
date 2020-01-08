@@ -46,15 +46,87 @@ function uploadImage() {
 
 }
 
-function deleteImage(url){
+function deleteImage(deleteUrl) {
 
-    fetch(url, {
+    fetch(deleteUrl, {
         method: 'DELETE',
     }).then(function () {
         
         listImages();
 
+    })
+    .catch(function(err) {
+
+        if(err)
+            throw err;
+
     });
+}
+
+function renameImage2(addInput, renameUrl) {
+
+    const postObject = {
+
+        newFilename: addInput.value
+
+    };
+
+    console.log(JSON.stringify(postObject));
+
+    fetch(renameUrl, {
+
+        method: 'put',
+        headers: {
+            "Content-type": "application/json"
+        },
+        body: JSON.stringify(postObject)
+
+    }).then(function () {
+
+        console.log('success');
+
+        listImages();
+
+    })
+    .catch(function(err) {
+
+        console.log(err);
+
+        if(err)
+            throw err;
+
+    });
+
+}
+
+function clearEvents(renameButton) {
+
+    let newrenameButton = renameButton.cloneNode(true);
+    renameButton.parentNode.replaceChild(newrenameButton, renameButton);
+ 
+    return newrenameButton;
+
+}
+
+function renameImage1(renameButton, renameUrl, container) {
+
+    var oldFilename = container.children[1].innerHTML;
+
+    container.removeChild(container.children[1]);
+
+    addInput = document.createElement('input');
+    addInput.setAttribute('value', oldFilename);
+    addInput.setAttribute('type', 'text');
+
+    container.insertBefore(addInput, container.children[1]);
+
+    renameButton = clearEvents(renameButton);
+    
+    renameButton.addEventListener('click', function() {
+
+        renameImage2(addInput, renameUrl);
+
+    })
 
 }
 
@@ -71,13 +143,14 @@ function listImages() {
                 imageList.removeChild(imageList.firstChild);
             }
 
-            images.array.forEach(function(image) {
+            for(let i = 0 ; i < images.array.length; ++i) {
+
+                const image = images.array[i];
+
                 if(image.belongs) {
                 
                     let img = document.createElement('img');
                     img.src = 'image/' + image._id;
-
-                    console.log(img.src);
 
                     // image name
                     let imageName = document.createElement('p');
@@ -95,15 +168,26 @@ function listImages() {
 
                     // download button
                     let downloadButton = document.createElement('a');
-                    let downloadUrl = 'http://localhost:3000/greyscale/image/' + image._id;
                     downloadButton.setAttribute('href', '/image/' + image._id);
                     downloadButton.setAttribute('download', image.filename);
                     downloadButton.innerText = 'Download';
 
+                    // rename button
+                    let renameButton = document.createElement('a');
+                    let renameUrl = 'http://localhost:3000/rename/' + image._id;
+                    renameButton.addEventListener('click',  function(){
+
+                        renameImage1(renameButton, renameUrl, imageList.children[i]);
+
+                    });
+                    renameButton.innerText = 'Rename';
+
                     // div container
                     let container = document.createElement('div');
+
                     container.appendChild(img);
                     container.appendChild(imageName);
+                    container.appendChild(renameButton);
                     container.appendChild(deleteButton);
                     container.appendChild(downloadButton);
             
@@ -111,7 +195,7 @@ function listImages() {
 
                 }
 
-            });
+            }
 
         });
 

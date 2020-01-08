@@ -1,6 +1,7 @@
 
 
 // Modules
+const bodyParser = require("body-parser");
 const mongodb = require('mongodb');
 const path = require('path');
 const crypto = require('crypto');
@@ -106,6 +107,7 @@ app.use(express.static(path.join(__dirname, 'pages')));
 app.set('view-engine', 'ejs');
 app.use(morgan("tiny"));
 app.use(express.urlencoded({extended: 'false'}));
+app.use(bodyParser.json());
 
 app.use(session({
     secret: 'shhhhh',
@@ -138,6 +140,8 @@ app.get('/greyscale/images', authGuard, function(req, res) {
   gfs.files.find().toArray(function(err, images) {
 
       images.map(function(image) {
+
+          //image.filename = 'default' + path.extname(image.filename);
       
           if(JSON.stringify(image.metadata) === JSON.stringify(req.user._id)){
 
@@ -193,6 +197,21 @@ app.delete('/delete/:id', function(req, res) {
       res.end();
 
   });
+
+});
+
+app.put('/rename/:id', function(req, res) {
+
+  var object_id = new mongodb.ObjectID(req.params.id);
+
+  gfs.files.update(
+
+    { _id: object_id },
+    { $set: { filename: req.body.newFilename } }
+
+  );
+
+  res.end();
 
 });
 
