@@ -143,7 +143,7 @@ function listImages() {
                 imageList.removeChild(imageList.firstChild);
             }
 
-            for(let i = 0 ; i < images.array.length; ++i) {
+            for(let i = 0, j = 0 ; i < images.array.length; ++i) {
 
                 const image = images.array[i];
 
@@ -177,7 +177,7 @@ function listImages() {
                     let renameUrl = 'http://localhost:3000/rename/' + image._id;
                     renameButton.addEventListener('click',  function(){
 
-                        renameImage1(renameButton, renameUrl, imageList.children[i]);
+                        renameImage1(renameButton, renameUrl, imageList.children[j - 1]);
 
                     });
                     renameButton.innerText = 'Rename';
@@ -192,6 +192,8 @@ function listImages() {
                     container.appendChild(downloadButton);
             
                     imageList.appendChild(container);
+
+                    ++j;
 
                 }
 
