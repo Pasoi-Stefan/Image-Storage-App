@@ -79,9 +79,13 @@ function listImages() {
 
                     console.log(img.src);
 
-                    let deleteButton = document.createElement('button')
-                    let deleteUrl = 'http://localhost:3000/delete/' + image._id;
+                    // image name
+                    let imageName = document.createElement('p');
+                    imageName.innerHTML = image.filename;
 
+                    // delete button
+                    let deleteButton = document.createElement('a')
+                    let deleteUrl = 'http://localhost:3000/delete/' + image._id;
                     deleteButton.addEventListener('click',  function(){
 
                         deleteImage(deleteUrl);
@@ -89,9 +93,19 @@ function listImages() {
                     });
                     deleteButton.innerText = 'Delete';
 
+                    // download button
+                    let downloadButton = document.createElement('a');
+                    let downloadUrl = 'http://localhost:3000/greyscale/image/' + image._id;
+                    downloadButton.setAttribute('href', '/image/' + image._id);
+                    downloadButton.setAttribute('download', image.filename);
+                    downloadButton.innerText = 'Download';
+
+                    // div container
                     let container = document.createElement('div');
                     container.appendChild(img);
+                    container.appendChild(imageName);
                     container.appendChild(deleteButton);
+                    container.appendChild(downloadButton);
             
                     imageList.appendChild(container);
 
