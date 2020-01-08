@@ -5,7 +5,7 @@ const uploadButton = document.getElementById('uploadButton');
 
 function getUsername() {
 
-    fetch('http://localhost:3000/greyscale/username')
+    fetch('http://localhost:3000/photo-deposit/username')
         .then(function(res) {
 
             res.json().then(function(Username) {
@@ -25,7 +25,7 @@ function uploadImage() {
     var file = imageInput.files[0];
     formData.append('image', file);
 
-    fetch('http://localhost:3000/greyscale/upload', {
+    fetch('http://localhost:3000/photo-deposit/upload', {
 
         method: 'post',
         body: formData
@@ -134,7 +134,7 @@ function listImages() {
 
     console.log('i tried!');
 
-    fetch('http://localhost:3000/greyscale/images')
+    fetch('http://localhost:3000/photo-deposit/images')
     .then(function (res) {
 
         res.json().then(function(images) {

@@ -24,10 +24,10 @@ exports.apply = function(app) {
 
     });
 
-    // GET greyscale
-    app.get('/greyscale', authGuard, function(req, res) {
+    // GET photo-deposit
+    app.get('/photo-deposit', authGuard, function(req, res) {
 
-        res.sendFile(__dirname + '/pages/greyscale.html');
+        res.sendFile(__dirname + '/pages/photo-deposit.html');
 
     });
 
@@ -41,7 +41,7 @@ exports.apply = function(app) {
     });
 
     //GET username
-    app.get('/greyscale/username', authGuard, function(req, res) {
+    app.get('/photo-deposit/username', authGuard, function(req, res) {
 
         res.json({ username: req.user.username});
 

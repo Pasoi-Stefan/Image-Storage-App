@@ -63,7 +63,7 @@ exports.apply = function(app, bcrypt, passport, User, upload) {
 
         passport.authenticate('local', {
 
-            successRedirect: '/greyscale',
+            successRedirect: '/photo-deposit',
             failureRedirect: '/login',
             failureFlash: true
 
@@ -72,7 +72,7 @@ exports.apply = function(app, bcrypt, passport, User, upload) {
     });
 
     // POST upload
-    app.post('/greyscale/upload', authGuard, upload.single('image'), function(req, res) {
+    app.post('/photo-deposit/upload', authGuard, upload.single('image'), function(req, res) {
 
         res.end();
     

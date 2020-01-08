@@ -27,7 +27,7 @@ const post_module = require('./post_module');
 
 
 // Database Connection
-mongoose.connect('mongodb://127.0.0.1:27017/greyscale', {useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://127.0.0.1:27017/photo-deposit', {useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
 
@@ -48,7 +48,7 @@ db.once('open', function() {
 
 // Create storage engine
 const storage = new GridFsStorage({
-    url: 'mongodb://127.0.0.1:27017/greyscale',
+    url: 'mongodb://127.0.0.1:27017/photo-deposit',
     options: {useNewUrlParser: true, useUnifiedTopology: true},
     file: function(req, file) {
       return new Promise((resolve, reject) => {
@@ -135,7 +135,7 @@ get_module.apply(app);
 post_module.apply(app, bcrypt, passport, User, upload);
 
 //GET images
-app.get('/greyscale/images', authGuard, function(req, res) {
+app.get('/photo-deposit/images', authGuard, function(req, res) {
 
   gfs.files.find().toArray(function(err, images) {
 
