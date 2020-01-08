@@ -86,3 +86,38 @@ a:hover {
     color: black;
 
 }
+
+@media only screen and (max-width: 768px) {
+    
+    .imageHandler img {
+
+        width: 100%;
+        height: 100%;
+    
+    }
+
+
+    .photo-page-container > a {
+
+        width: 70%;
+    
+    }
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1280px) {
+    
+    .imageHandler img {
+
+        width: 75%;
+        height: 75%;
+    
+    }
+
+    .photo-page-container > a {
+
+        width: 35%;
+    
+    }
+
+}
