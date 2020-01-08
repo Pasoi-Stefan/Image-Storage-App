@@ -1,4 +1,4 @@
-exports.apply = function(app, passport, passport_local, moongose, bcrypt, User) {
+exports.apply = function(app, passport, passport_local, bcrypt, User) {
 
     const localStrategy = passport_local.Strategy;
      

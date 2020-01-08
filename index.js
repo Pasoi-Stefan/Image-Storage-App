@@ -1,7 +1,7 @@
 
+
 // Modules
 const mongodb = require('mongodb');
-const authGuard = require('./authGuard').authGuard;
 const path = require('path');
 const crypto = require('crypto');
 const multer = require('multer');
@@ -17,10 +17,13 @@ const express = require('express');
 const session = require('express-session');
 const app = express();
 
+
 // Custom Modules
+const authGuard = require('./authGuard').authGuard;
 const passport_module = require('./passport_module');
 const get_module = require('./get_module');
 const post_module = require('./post_module');
+
 
 // Database Connection
 mongoose.connect('mongodb://127.0.0.1:27017/greyscale', {useNewUrlParser: true, useUnifiedTopology: true });
@@ -29,17 +32,18 @@ const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 
+
 // Init gfs
 let gfs;
 
 db.once('open', function() {
 
-    // Init stream
     gfs = Grid(db.db, mongoose.mongo);
     gfs.collection('uploads');
     console.log('Database connection succesful!');
 
 });
+
 
 // Create storage engine
 const storage = new GridFsStorage({
@@ -63,7 +67,28 @@ const storage = new GridFsStorage({
     }
   });
 
-  const upload = multer({ storage });
+  const upload = multer({
+    
+    storage: storage,
+    fileFilter: function(req, file, cb) {
+
+      if (file.mimetype === "image/png" ||
+            file.mimetype === "image/jpg" ||
+               file.mimetype === "image/jpeg" ||
+                 file.mimetype === "image/bmp") {
+
+          cb(null, true);
+
+      } else {
+
+        cb(new Error("File format should be PNG, JPG, JPEG or BMP"), false); 
+
+      }
+
+    }
+
+  });
+
 
 // User schema and model
 const userSchema = new mongoose.Schema({
@@ -74,6 +99,7 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model('User', userSchema);
+
 
 // Settings
 app.use(express.static(path.join(__dirname, 'pages')));
@@ -89,6 +115,7 @@ app.use(session({
 
 app.use(flash());
 
+
  //Flash config
  app.use(function(req, res, next) {
 
@@ -99,36 +126,35 @@ app.use(flash());
 
  });
 
+
 //Apply custom modules
-passport_module.apply(app, passport, passport_local, mongoose, bcrypt, User);
-get_module.apply(app, gfs);
+passport_module.apply(app, passport, passport_local, bcrypt, User);
+get_module.apply(app);
 post_module.apply(app, bcrypt, passport, User, upload);
 
-
-
 //GET images
- app.get('/greyscale/images', authGuard, function(req, res) {
+app.get('/greyscale/images', authGuard, function(req, res) {
 
-    gfs.files.find().toArray(function(err, images) {
+  gfs.files.find().toArray(function(err, images) {
 
-        images.map(function(image) {
-          
-            if(JSON.stringify(image.metadata) === JSON.stringify(req.user._id)){
+      images.map(function(image) {
+      
+          if(JSON.stringify(image.metadata) === JSON.stringify(req.user._id)){
 
-                image.belongs = true;
-                
+              image.belongs = true;
+              
 
-            } else {
+          } else {
 
-                image.belongs = false;
+              image.belongs = false;
 
-            }
+          }
 
-        });
+      });
 
-        res.json({ array: images });
+      res.json({ array: images });
 
-    });
+  });
 
 });
 
@@ -142,29 +168,15 @@ app.get('/image/:id', function(req, res) {
     if(err)
       throw err;
 
-    if(image.contentType === 'image/jpeg' || 
-         image.contentType === 'image/jpg' ||
-            image.contentType === 'image/png' || 
-              image.contentType === 'image/bmp') {
+    const readstream = gfs.createReadStream({
 
-         /* const readstream = gfs.createReadStream({
+          _id: image._id
 
-              filename: image.filename,
-              metadata: image.metadata
+     });
 
-          });*/
+    readstream.pipe(res);
 
-          const readstream = gfs.createReadStream({
-
-            _id: image._id
-
-        });
-
-          readstream.pipe(res);
-
-      } 
-
-  })
+  });
 
 });
 
