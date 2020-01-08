@@ -7,26 +7,33 @@
     <meta http-equiv =" X-UA-Compatible"  content =" ie=edge">
     <title>Photo Deposit</title>
 
-    <link rel='stylesheet', type='text/css', media='screen', href='style.css'>
+    <link rel="ico">
+    <link rel='stylesheet', type='text/css', media='screen', href='photo-page.css'>
     
 
 </head>
 <body>
-    <p id='username'></p>
-    <a href='/logout'>Logout</a>
 
-    <form>
+    <div class="photo-page-container">
 
-      <input type='file' name='image' accept='.jpg, .jpeg, .png, .bmp' id='imageInput'>
-      <button type='button' id='uploadButton'>Submit</button>
-      
-    </form>
+      <h1 id='username'></h1>
+      <a href='/logout'>Logout</a>
 
-    <div id='imageList'></div>
+      <form>
 
-    <script src='script.js'></script>
+        <input type='file' name='image' accept='.jpg, .jpeg, .png, .bmp' id='imageInput'>
+        <button type='button' id='uploadButton'>Submit</button>
+        
+      </form>
+
+      <div id='imageList'></div>
+
+      <script src='script.js'></script>
+
+  </div>
 
 </form>
+
 </body>
 </html>
 

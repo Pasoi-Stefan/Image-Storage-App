@@ -159,6 +159,7 @@ function listImages() {
                     // delete button
                     let deleteButton = document.createElement('a')
                     let deleteUrl = 'http://localhost:3000/delete/' + image._id;
+                    deleteButton.setAttribute('href', '#');
                     deleteButton.addEventListener('click',  function(){
 
                         deleteImage(deleteUrl);
@@ -175,6 +176,7 @@ function listImages() {
                     // rename button
                     let renameButton = document.createElement('a');
                     let renameUrl = 'http://localhost:3000/rename/' + image._id;
+                    renameButton.setAttribute('href', '#');
                     renameButton.addEventListener('click',  function(){
 
                         renameImage1(renameButton, renameUrl, imageList.children[j - 1]);
@@ -184,6 +186,7 @@ function listImages() {
 
                     // div container
                     let container = document.createElement('div');
+                    container.setAttribute('class', 'imageHandler');
 
                     container.appendChild(img);
                     container.appendChild(imageName);

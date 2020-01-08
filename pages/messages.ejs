@@ -1,18 +1,18 @@
 <% if(typeof usernameError != 'undefined'){%>
 
-    <div>
+    <div class='message-bad'>
 
-        <%= usernameError %>
+        <p><%= usernameError %></p>
        
     </div>
 
 <% } %>
 
-<% if(error !== '') { %>
+<% if(error !== '' && typeof error !== 'undefined') { %>
 
     <div>
 
-        <%= error %>
+        <p><%= error %></p>
        
     </div>
 
@@ -22,7 +22,7 @@
 
     <div>
 
-        <%= success_msg %>
+        <p><%= success_msg %></p>
 
     </div>
 
@@ -32,7 +32,7 @@
 
     <div>
 
-        <%= error_msg %>
+        <p><%= error_msg %></p>
        
     </div>
 
