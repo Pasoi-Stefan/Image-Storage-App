@@ -75,7 +75,7 @@ function listImages() {
                 if(image.belongs) {
                 
                     let img = document.createElement('img');
-                    img.src = 'image/' + image.filename + '/' + image.metadata;
+                    img.src = 'image/' + image._id;
 
                     console.log(img.src);
 

@@ -1,5 +1,6 @@
 
 // Modules
+const mongodb = require('mongodb');
 const authGuard = require('./authGuard').authGuard;
 const path = require('path');
 const crypto = require('crypto');
@@ -123,8 +124,6 @@ post_module.apply(app, bcrypt, passport, User, upload);
 
             }
 
-            console.log(image.belongs);
-
         });
 
         res.json({ array: images });
@@ -134,9 +133,11 @@ post_module.apply(app, bcrypt, passport, User, upload);
 });
 
 // GET image
-app.get('/image/:filename/:id', function(req, res) {
+app.get('/image/:id', function(req, res) {
 
-  gfs.files.findOne({filename: req.params.filename}, function(err, image) {
+  var object_id = new mongodb.ObjectID(req.params.id);
+
+  gfs.files.findOne({ _id: object_id }, function(err, image) {
 
     if(err)
       throw err;
@@ -146,12 +147,18 @@ app.get('/image/:filename/:id', function(req, res) {
             image.contentType === 'image/png' || 
               image.contentType === 'image/bmp') {
 
-          const readstream = gfs.createReadStream({
+         /* const readstream = gfs.createReadStream({
 
               filename: image.filename,
               metadata: image.metadata
 
-          });
+          });*/
+
+          const readstream = gfs.createReadStream({
+
+            _id: image._id
+
+        });
 
           readstream.pipe(res);
 
@@ -164,7 +171,9 @@ app.get('/image/:filename/:id', function(req, res) {
 //DELETE image
 app.delete('/delete/:id', function(req, res) {
 
-  gfs.remove({_id: req.params.id, root: 'uploads'}, function(err, gridStore) {
+  var object_id = new mongodb.ObjectID(req.params.id);
+
+  gfs.remove({_id: object_id, root: 'uploads'}, function(err, gridStore) {
 
       if(err) 
         throw err;
